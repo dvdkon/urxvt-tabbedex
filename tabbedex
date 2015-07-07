@@ -469,6 +469,8 @@ sub on_user_command {
 
 sub on_wm_delete_window {
    my ($self) = @_;
+   #Fix not being able to close urxvt when reopen-on-close was yes
+   $self->{reopen_on_close} = 0;
    $_->destroy for @{ $self->{tabs} };
    1;
 }
@@ -493,7 +495,7 @@ sub tab_destroy {
 
    if ($self->{reopen_on_close} && $#{ $self->{tabs} } == 0) {
       $self->new_tab;
-      $self->make_current ($self->{tabs}[-1]);
+      $self->make_current ($self->{tabs}[0]);
    }
 
    $self->{tabs} = [ grep $_ != $tab, @{ $self->{tabs} } ];
